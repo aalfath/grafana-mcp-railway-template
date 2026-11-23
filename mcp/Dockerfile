@@ -6,6 +6,7 @@ COPY --chmod=755 start.sh /app/start.sh
 # Streamable HTTP on Railway's $PORT. The start script refuses to run without
 # MCP_GRAFANA_SERVER_TOKEN, so the endpoint is never open.
 ENV PORT=8000 \
-    GOMAXPROCS=2
+    GOMAXPROCS=2 \
+    GRAFANA_USAGE_STATS=disabled
 EXPOSE 8000
 ENTRYPOINT ["/app/start.sh"]
