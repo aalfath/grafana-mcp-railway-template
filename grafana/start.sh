@@ -15,4 +15,5 @@ fi
 mkdir -p "$GF_PATHS_DATA" "$GF_PATHS_PLUGINS"
 chown -R 472:0 "$GF_PATHS_DATA"
 
-exec setpriv --reuid=472 --regid=0 --clear-groups /run.sh
+# BusyBox su: -p keeps the environment (GF_* settings) for the grafana user.
+exec su -p -s /bin/sh grafana -c "exec /run.sh"
