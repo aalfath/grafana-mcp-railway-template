@@ -1,0 +1,22 @@
+# Local test only (Daytona). Mirrors the Railway template's variables.
+services:
+  grafana:
+    build: ./grafana
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: local-test-password-123
+    volumes: [grafana-data:/var/lib/grafana]
+    ports: ["3000:3000"]
+  mcp:
+    build: ./mcp
+    environment:
+      PORT: "8000"
+      GRAFANA_URL: http://grafana:3000
+      GRAFANA_USERNAME: admin
+      GRAFANA_PASSWORD: local-test-password-123
+      MCP_GRAFANA_SERVER_TOKEN: local-test-token-abc
+      GRAFANA_USAGE_STATS: disabled
+    ports: ["8000:8000"]
+    depends_on: [grafana]
+volumes:
+  grafana-data:
