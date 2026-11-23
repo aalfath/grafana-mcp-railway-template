@@ -8,6 +8,15 @@ if [ -z "${GF_SECURITY_ADMIN_PASSWORD:-}" ]; then
 fi
 
 export GF_SERVER_HTTP_PORT="${PORT:-3000}"
+
+# Size Go's soft memory limit from the container limit (Railway Free plan = 0.5 GB),
+# so Grafana collects garbage before the kernel OOM-kills it.
+if [ -z "${GOMEMLIMIT:-}" ] && [ -r /sys/fs/cgroup/memory.max ]; then
+  lim=$(cat /sys/fs/cgroup/memory.max)
+  if [ "$lim" != "max" ]; then
+    export GOMEMLIMIT="$((lim * 60 / 100 / 1048576))MiB"
+  fi
+fi
 if [ -z "${GF_SERVER_ROOT_URL:-}" ] && [ -n "${RAILWAY_PUBLIC_DOMAIN:-}" ]; then
   export GF_SERVER_ROOT_URL="https://${RAILWAY_PUBLIC_DOMAIN}/"
 fi
